@@ -1,0 +1,4 @@
+pandas-datareader
+keras
+sklearn
+h5py
