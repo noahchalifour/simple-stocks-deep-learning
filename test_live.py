@@ -12,15 +12,16 @@ FILE_DIR = os.path.dirname(os.path.realpath(__file__))
 
 ap = argparse.ArgumentParser()
 ap.add_argument('-m', '--model', required=True, type=str)
+ap.add_argument('-c', '--checkpoint', required=True, type=str)
 
 args = vars(ap.parse_args())
 
 model_name = args['model']
 
-with open(os.path.join(FILE_DIR, 'models/{}/model.json'.format(model_name)), 'r') as f:
+with open(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}/model.json'.format(model_name, args['checkpoint'])), 'r') as f:
     model = model_from_json(f.read())
 
-model.load_weights(os.path.join(FILE_DIR, 'models/{}/model.h5'.format(model_name)))
+model.load_weights(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}/model.h5'.format(model_name, args['checkpoint'])))
 
 with open(os.path.join(FILE_DIR, 'models/{}/scaler.pkl'.format(model_name)), 'rb') as f:
     scaler = pickle.load(f)

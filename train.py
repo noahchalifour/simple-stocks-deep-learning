@@ -125,10 +125,13 @@ if __name__ == '__main__':
 		test_score_string = 'Test Score: %.2f RMSE' % test_score
 		print(test_score_string)
 
-		with open(os.path.join(FILE_DIR, 'models/{}/model.json'.format(filename)), 'w') as f:
+		if not os.path.exists(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}'.format(filename, params['epochs']))):
+			os.makedirs(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}'.format(filename, params['epochs'])))
+
+		with open(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}/model.json'.format(filename, params['epochs'])), 'w') as f:
 			f.write(model.to_json())
 
-		model.save_weights(os.path.join(FILE_DIR, 'models/{}/model.h5'.format(filename)))
+		model.save_weights(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}/model.h5'.format(filename, params['epochs'])))
 
 		with open(os.path.join(FILE_DIR, 'models/{}/test_score.txt'.format(filename)), 'w') as f:
 			f.write(test_score_string)
