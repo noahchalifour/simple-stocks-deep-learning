@@ -168,10 +168,10 @@ if __name__ == '__main__':
 			for j in range(prev_step, step):
 				if j % params['steps_per_checkpoint'] == 0 and j != 0:
 
-					print("step: {}, time: {}".format(step, time.time() - start_time))
-					if not os.path.exists(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}'.format(filename, step))):
-						os.makedirs(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}'.format(filename, step)))
-					with open(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}/test_results.txt'.format(filename, step)), 'w') as f:
+					print("step: {}, time: {}".format(j, time.time() - start_time))
+					if not os.path.exists(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}'.format(filename, j))):
+						os.makedirs(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}'.format(filename, j)))
+					with open(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}/test_results.txt'.format(filename, j)), 'w') as f:
 						for i in range(len(x_test)):
 							prediction = model.predict(np.array([x_test[i]]))
 							prediction = scaler.inverse_transform(prediction)[0][0]
@@ -182,10 +182,11 @@ if __name__ == '__main__':
 								prediction
 							))
 
-					with open(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}/model.json'.format(filename, step)), 'w') as f:
+					with open(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}/model.json'.format(filename, j)), 'w') as f:
 						f.write(model.to_json())
 
-					model.save_weights(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}/model.h5'.format(filename, step)))
+					model.save_weights(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}/model.h5'.format(filename, j)))
+					break
 
 			prev_step = step
 

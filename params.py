@@ -16,7 +16,7 @@ params = {
     'optimizer': 'adam',
     'epochs': None,
     'batch_size': 64,
-    'steps_per_checkpoint': 5,
+    'steps_per_checkpoint': 1000,
     'test_size': 0.2,
     'max_data': None,
     'model_type': 'regression'
