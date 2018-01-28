@@ -157,35 +157,37 @@ if __name__ == '__main__':
 			json.dump(params, f)
 
 		start_time = time.time()
+		prev_step = 0
 		step = 0
 
 		while True:
 			model.fit(x_train, y_train, epochs=1, batch_size=params['batch_size'], verbose=0)
 
-			if step % params['steps_per_checkpoint'] == 0 and step != 0:
+			step += len(x_train) / batch_size
 
-				print("step: {}, time: {}".format(step, time.time() - start_time))
-				if not os.path.exists(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}'.format(filename, step))):
-					os.makedirs(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}'.format(filename, step)))
-				with open(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}/test_results.txt'.format(filename, step)), 'w') as f:
-					for i in range(len(x_test)):
-						prediction = model.predict(np.array([x_test[i]]))
-						prediction = scaler.inverse_transform(prediction)[0][0]
-						original_x = scaler.inverse_transform(x_test[i])
-						f.write("#######################\n\nX: {}\nY Actual: {}\nY Predicted: {}\n\n".format(
-							original_x[len(x_test[i])-1][0], 
-							scaler.inverse_transform(y_test[i])[0][0],
-							prediction
-						))
+			for j in range(prev_step, step):
+				if j % params['steps_per_checkpoint'] == 0 and j != 0:
 
-				with open(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}/model.json'.format(filename, step)), 'w') as f:
-					f.write(model.to_json())
+					print("step: {}, time: {}".format(step, time.time() - start_time))
+					if not os.path.exists(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}'.format(filename, step))):
+						os.makedirs(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}'.format(filename, step)))
+					with open(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}/test_results.txt'.format(filename, step)), 'w') as f:
+						for i in range(len(x_test)):
+							prediction = model.predict(np.array([x_test[i]]))
+							prediction = scaler.inverse_transform(prediction)[0][0]
+							original_x = scaler.inverse_transform(x_test[i])
+							f.write("#######################\n\nX: {}\nY Actual: {}\nY Predicted: {}\n\n".format(
+								original_x[len(x_test[i])-1][0], 
+								scaler.inverse_transform(y_test[i])[0][0],
+								prediction
+							))
 
-				model.save_weights(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}/model.h5'.format(filename, step)))
+					with open(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}/model.json'.format(filename, step)), 'w') as f:
+						f.write(model.to_json())
 
-			step += 1
+					model.save_weights(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}/model.h5'.format(filename, step)))
 
-
+			prev_step = step
 
 
 
