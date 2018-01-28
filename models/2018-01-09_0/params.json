@@ -1,1 +1,0 @@
-{"symbols": ["BTC-USD", "ETH-USD", "XRP-USD", "BCH-USD", "ADA-USD"], "start_date": "2000-01-01", "end_date": "2018-01-09 09:33:14.745670", "chunk": 10, "num_hidden_layers": 3, "lstm_units": 100, "loss": "mean_squared_error", "optimizer": "adam", "epochs": 1, "batch_size": 1, "test_size": 0.2, "max_data": 50, "model_type": "regression"}
