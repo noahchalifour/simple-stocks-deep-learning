@@ -163,7 +163,7 @@ if __name__ == '__main__':
 		while True:
 			model.fit(x_train, y_train, epochs=1, batch_size=params['batch_size'], verbose=0)
 
-			step += len(x_train) // params['batch_size']
+			step += (len(x_train) // params['batch_size'])
 
 			for j in range(prev_step, step):
 				if j % params['steps_per_checkpoint'] == 0 and j != 0:
