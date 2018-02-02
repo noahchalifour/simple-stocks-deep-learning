@@ -8,6 +8,7 @@ from sklearn.metrics import mean_squared_error
 import random
 import math
 import os
+import coremltools
 import pickle
 import json
 import time
@@ -132,6 +133,10 @@ if __name__ == '__main__':
 			f.write(model.to_json())
 
 		model.save_weights(os.path.join(FILE_DIR, 'models/{}/checkpoints/checkpoint-{}/model.h5'.format(filename, params['epochs'])))
+
+		if params['save_coreml'] == True:
+			coreml_model = coremltools.converters.keras.convert(model)
+			coreml_model.save("models/{}/checkpoints/checkpoint-{}/model.mlmodel".format(filename, params['epochs']))
 
 		with open(os.path.join(FILE_DIR, 'models/{}/test_score.txt'.format(filename)), 'w') as f:
 			f.write(test_score_string)
